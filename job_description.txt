@@ -1,0 +1,18 @@
+Job description
+We are seeking a highly skilled Generative AI Architect with  12 to 18 years of overall experience and a strong balance of business acumen and technical expertise . The ideal candidate will have proven expertise in building, deploying, and scaling enterprise-grade GenAI solutions , with hands-on experience across advanced LLMOps, Agentic AI, and fine-tuning techniques.
+Essential functions
+Define AI use case architecture (predictive alerts, error models, assignment engine, RAG setup agent, low-cognitive UI).
+Design the Data Platform for telemetry/log ingestion and transformation.
+Define real-time and batch data pipelines for model training and retraining.
+Design model serving and lifecycle management (validation, versioning, drift detection).
+Architect RAG pipelines (indexing, chunking, retrieval, knowledge base).
+Collaborate with Java Architect to expose required events and APIs.
+Collaborate with Platform Architect to ensure infra supports AI workloads (GPU/CPU, memory, scaling).
+Work with DevOps to implement MLOps workflows and automated model deployment.
+Define governance of AI components (auditability, safety, explainability).
+Qualifications
+Strong experience in ML/AI architecture (production systems scale, not just notebooks)
+Python + ML frameworks (PyTorch / TensorFlow / scikit-learn)
+Understanding of event streaming systems (Kafka or equivalent)
+Experience designing data pipelines and feature stores
+Experience with model lifecycle management (MLflow, Kubeflow, SageMaker, or similar)
