@@ -1,0 +1,280 @@
+Company Name: ABC Corporation
+Document Type: Enterprise Policy and Operations Handbook
+
+====================================================
+Section 1: Leave Policy
+====================================================
+
+1. Annual Paid Leave:
+Employees are entitled to 20 working days of paid leave per calendar year. Unused leave can be carried forward up to a maximum of 10 days into the next year. Leave requests must be submitted at least 3 days in advance through the HR portal.
+
+2. Sick Leave:
+Employees are entitled to 10 days of sick leave annually. A medical certificate is required if sick leave exceeds 2 consecutive days.
+
+3. Maternity Leave:
+Female employees are entitled to 26 weeks of paid maternity leave in accordance with government regulations.
+
+4. Paternity Leave:
+Male employees are entitled to 10 working days of paid paternity leave.
+
+5. Unpaid Leave:
+Employees may apply for unpaid leave subject to manager and HR approval.
+
+====================================================
+Section 2: Work From Home Policy
+====================================================
+
+Employees are allowed to work from home up to 2 days per week with prior manager approval.
+
+Remote employees must:
+- Be available during core business hours from 10 AM to 6 PM
+- Use company-approved VPN and devices
+- Follow all data security guidelines
+- Maintain professional conduct during virtual meetings
+
+Work from home is not permitted for roles requiring physical presence such as facilities management and security staff.
+
+====================================================
+Section 3: Medical and Insurance Benefits
+====================================================
+
+All full-time employees are covered under the company medical insurance plan.
+
+Coverage includes:
+- Hospitalization expenses up to INR 5,00,000 per year
+- OPD consultation expenses up to INR 10,000 per year
+- Coverage for spouse and up to two dependent children
+
+Exclusions:
+- Cosmetic surgery
+- Experimental treatments
+- Non-prescribed medicines
+
+====================================================
+Section 4: IT Security Policy
+====================================================
+
+Employees must comply with IT security standards:
+
+- Passwords must be changed every 90 days
+- Multi-factor authentication is mandatory for VPN access
+- USB storage devices are prohibited unless approved by IT security
+- Confidential data must not be stored on personal devices
+- Company email must be used for official communication
+
+Security incidents must be reported within 1 hour to the IT security team.
+
+Violation of IT security policies may result in disciplinary action.
+
+====================================================
+Section 5: Device Usage Policy
+====================================================
+
+Employees are issued company laptops for official use only.
+
+Rules:
+- Installation of unauthorized software is prohibited
+- Devices must be locked when unattended
+- Antivirus and firewall must be enabled at all times
+- Devices should not be shared with non-employees
+
+Loss or theft of company devices must be reported within 24 hours.
+
+====================================================
+Section 6: Performance and Appraisal Policy
+====================================================
+
+Performance appraisals are conducted annually in the month of March.
+
+Evaluation criteria include:
+- Technical skills
+- Communication skills
+- Project delivery
+- Compliance with policies
+- Team collaboration
+
+High-performing employees may receive:
+- Salary increments
+- Performance bonuses
+- Promotions
+
+====================================================
+Section 7: Code of Conduct
+====================================================
+
+Employees must:
+- Maintain professional behavior
+- Avoid conflicts of interest
+- Respect workplace diversity
+- Not engage in harassment or discrimination
+- Protect company reputation
+
+Violations of the code of conduct will be investigated by HR and senior management.
+
+====================================================
+Section 8: Travel and Expense Policy
+====================================================
+
+Employees traveling for business purposes are eligible for reimbursement of:
+
+- Economy class flight tickets
+- Hotel accommodation up to INR 5,000 per night
+- Daily meal allowance up to INR 1,500
+- Local transportation expenses
+
+Expense claims must be submitted within 7 working days along with valid receipts.
+
+====================================================
+Section 9: Data Privacy and Retention Policy
+====================================================
+
+ABC Corporation is committed to protecting employee and customer data.
+
+Key principles:
+- Personal data must be collected only for business purposes
+- Access to data must be role-based
+- Data must be encrypted at rest and in transit
+- Data retention period is 5 years unless legally required otherwise
+
+Any data breach must be reported within 2 hours to the Data Protection Officer.
+
+====================================================
+Section 10: Training and Certification Policy
+====================================================
+
+Employees are eligible for:
+- 5 paid training days per year
+- Access to internal and external learning platforms
+- Certification reimbursement up to INR 30,000 per year subject to manager approval
+
+Employees must submit certificates for reimbursement within 30 days of course completion.
+
+====================================================
+Section 11: Incident Management Policy
+====================================================
+
+An incident is defined as any unplanned interruption to a business service.
+
+Incident categories:
+- Critical: System outage affecting all users
+- High: Major functionality unavailable
+- Medium: Partial service degradation
+- Low: Minor issues
+
+Response timelines:
+- Critical: 15 minutes
+- High: 30 minutes
+- Medium: 2 hours
+- Low: 1 business day
+
+====================================================
+Section 12: Change Management Policy
+====================================================
+
+All system changes must follow the change management process.
+
+Change types:
+- Standard Change: Pre-approved low-risk changes
+- Normal Change: Requires CAB approval
+- Emergency Change: For critical incidents
+
+All changes must be documented and tested before production deployment.
+
+====================================================
+Section 13: Business Continuity and Disaster Recovery
+====================================================
+
+The company maintains a disaster recovery plan to ensure business continuity.
+
+Objectives:
+- Recovery Time Objective (RTO): 4 hours
+- Recovery Point Objective (RPO): 1 hour
+
+Backups are taken daily and stored in a secure offsite location.
+
+Disaster recovery drills are conducted twice a year.
+
+====================================================
+Section 14: Procurement and Vendor Management
+====================================================
+
+All purchases must follow the procurement policy.
+
+Rules:
+- Three vendor quotations are required for purchases above INR 50,000
+- Contracts must be approved by the legal department
+- Vendors must comply with security and data privacy requirements
+
+Payments are processed within 30 days of invoice submission.
+
+====================================================
+Section 15: Financial Policy
+====================================================
+
+Employees must follow financial governance rules:
+
+- All expenses must be business-related
+- Fraud or misuse of company funds will result in termination
+- Financial records must be maintained for audit purposes
+
+Annual audits are conducted by external auditors.
+
+====================================================
+Section 16: Customer Support Policy
+====================================================
+
+Customer support operates from 9 AM to 9 PM on business days.
+
+Service Level Agreements (SLA):
+- Critical issues: Resolution within 4 hours
+- High priority issues: Resolution within 8 hours
+- Medium priority issues: Resolution within 24 hours
+- Low priority issues: Resolution within 3 business days
+
+====================================================
+Section 17: Cloud and Infrastructure Policy
+====================================================
+
+All cloud resources must be provisioned through the IT department.
+
+Rules:
+- Production systems must use approved cloud providers
+- Encryption must be enabled for storage and network traffic
+- Access must follow least privilege principle
+- Logs must be retained for 90 days
+
+====================================================
+Section 18: AI and Data Usage Policy
+====================================================
+
+AI systems must be used responsibly.
+
+Guidelines:
+- Do not input confidential data into external AI tools
+- AI outputs must be reviewed by humans
+- Bias and fairness must be evaluated regularly
+- AI models must be monitored for drift
+
+====================================================
+Section 19: Remote Access Policy
+====================================================
+
+Remote access is permitted only via secure VPN.
+
+Rules:
+- VPN sessions expire after 8 hours
+- MFA is mandatory
+- Access logs are audited weekly
+
+Unauthorized remote access is strictly prohibited.
+
+====================================================
+Section 20: Exit and Asset Recovery Policy
+====================================================
+
+Upon resignation or termination:
+
+- Employees must return company devices on the last working day
+- System access will be revoked immediately
+- Final settlement will be processed within 30 days
+- Exit interviews are mandatory

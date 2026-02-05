@@ -1,0 +1,147 @@
+Company Name: ABC Corporation
+Document Type: Employee Handbook and IT Policy
+
+---
+
+Section 1: Leave Policy
+
+ABC Corporation provides the following leave benefits to full-time employees:
+
+1. Annual Paid Leave:
+Employees are entitled to 20 working days of paid leave per calendar year. Unused leave can be carried forward up to a maximum of 10 days into the next year.
+
+2. Sick Leave:
+Employees are entitled to 10 days of sick leave annually. A medical certificate is required if sick leave exceeds 2 consecutive days.
+
+3. Maternity Leave:
+Female employees are entitled to 26 weeks of paid maternity leave as per government regulations.
+
+4. Paternity Leave:
+Male employees are entitled to 10 working days of paid paternity leave.
+
+5. Unpaid Leave:
+Employees may apply for unpaid leave subject to manager approval.
+
+---
+
+Section 2: Work From Home Policy
+
+ABC Corporation allows employees to work from home up to 2 days per week. Work from home requests must be approved by the reporting manager.
+
+Employees working remotely must:
+- Be available during core business hours (10 AM to 6 PM)
+- Maintain data confidentiality
+- Use company-provided laptops and VPN
+
+Work from home is not allowed for roles requiring physical presence such as data center operations and security staff.
+
+---
+
+Section 3: Medical and Insurance Benefits
+
+All full-time employees are covered under the company medical insurance plan.
+
+Coverage includes:
+- Hospitalization expenses up to INR 5,00,000 per year
+- OPD consultation up to INR 10,000 per year
+- Coverage for spouse and up to two dependent children
+
+Insurance does not cover cosmetic surgery or experimental treatments.
+
+---
+
+Section 4: IT Security Policy
+
+Employees must follow the IT security guidelines strictly:
+
+- Passwords must be changed every 90 days
+- Two-factor authentication is mandatory for VPN access
+- USB storage devices are prohibited unless approved by IT security
+- Confidential data must not be stored on personal devices
+- Company email must be used for official communication
+
+Violation of IT security policy may result in disciplinary action.
+
+---
+
+Section 5: Device Usage Policy
+
+Employees are provided company laptops for official work only.
+
+Rules:
+- Installation of unauthorized software is prohibited
+- Devices must be locked when unattended
+- Antivirus software must be enabled at all times
+- Devices should not be shared with non-employees
+
+Loss of company devices must be reported within 24 hours to IT support.
+
+---
+
+Section 6: Performance and Appraisal Policy
+
+Employees will undergo performance appraisal once every year in the month of March.
+
+Performance evaluation criteria include:
+- Technical skills
+- Communication skills
+- Project delivery
+- Compliance with company policies
+
+High-performing employees may receive:
+- Salary increments
+- Performance bonuses
+- Promotions
+
+---
+
+Section 7: Code of Conduct
+
+Employees are expected to:
+- Maintain professional behavior
+- Avoid conflicts of interest
+- Respect workplace diversity
+- Not engage in harassment or discrimination
+- Protect company reputation
+
+Any violation of code of conduct will be investigated by HR and management.
+
+---
+
+Section 8: Travel Policy
+
+Employees traveling for business purposes are entitled to reimbursement for:
+
+- Economy class flight tickets
+- Hotel stay up to INR 5,000 per night
+- Daily food allowance up to INR 1,500
+- Local transport expenses
+
+Travel expenses must be submitted within 7 days of travel completion along with valid receipts.
+
+---
+
+Section 9: Data Privacy Policy
+
+ABC Corporation is committed to protecting employee and customer data.
+
+Key principles:
+- Personal data must be collected only for business purposes
+- Data access should be role-based
+- Data must be encrypted at rest and in transit
+- Data retention period is 5 years unless legally required otherwise
+
+Employees must report any data breach within 2 hours to the IT security team.
+
+---
+
+Section 10: Training and Development
+
+The company encourages continuous learning and development.
+
+Employees are eligible for:
+- 5 paid training days per year
+- Access to online learning platforms
+- Certification reimbursement up to INR 30,000 per year (subject to approval)
+
+
