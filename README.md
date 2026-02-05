@@ -6,20 +6,27 @@ and measuring the impact of each optimization.
 # High-Level Architecture
 
 User Query
+
    ↓
 Query Rewriter (LLM)
+
    ↓
 Vector Retrieval (High Recall)
+
    ↓
 Cross-Encoder Reranker (Precision)
+
    ↓
 Context Builder
    ├── Raw Context
    └── Compressed Context
+   
    ↓
 LLM Answer Generation
+
    ↓
 Metrics Engine (Tokens, Cost, Latency)
+
    ↓
 Final Answer + Improvement Report
 
