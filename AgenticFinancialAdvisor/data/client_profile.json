@@ -1,0 +1,215 @@
+[
+  {
+    "client_id": "EJ-CL-10234",
+    "name": "John Smith",
+    "age": 52,
+    "marital_status": "Married",
+    "dependents": 2,
+    "occupation": "Senior IT Manager",
+    "annual_income_usd": 185000,
+    "net_worth_usd": 1250000,
+    "risk_tolerance": "Moderate",
+    "investment_experience": "Intermediate",
+    "financial_goals": [
+      {
+        "goal_type": "Retirement",
+        "target_age": 65,
+        "target_amount_usd": 2500000,
+        "priority": "High"
+      },
+      {
+        "goal_type": "College Education",
+        "beneficiary": "Daughter",
+        "target_year": 2031,
+        "target_amount_usd": 180000,
+        "priority": "Medium"
+      }
+    ],
+    "life_events": [
+      {
+        "event": "Recent Promotion",
+        "date": "2024-11-01",
+        "impact": "Increase in annual income"
+      }
+    ],
+    "advisor_notes": [
+      "Client prefers long-term growth with limited volatility.",
+      "Concerned about market downturns close to retirement."
+    ]
+  },
+
+  {
+    "client_id": "EJ-CL-20491",
+    "name": "Linda Carter",
+    "age": 61,
+    "marital_status": "Widowed",
+    "dependents": 0,
+    "occupation": "Retired School Administrator",
+    "annual_income_usd": 72000,
+    "net_worth_usd": 980000,
+    "risk_tolerance": "Conservative",
+    "investment_experience": "Basic",
+    "financial_goals": [
+      {
+        "goal_type": "Retirement Income",
+        "monthly_income_target_usd": 4500,
+        "priority": "High"
+      },
+      {
+        "goal_type": "Estate Planning",
+        "priority": "Medium"
+      }
+    ],
+    "life_events": [
+      {
+        "event": "Spouse Deceased",
+        "date": "2023-06-15",
+        "impact": "Shift toward income stability"
+      }
+    ],
+    "advisor_notes": [
+      "Prefers capital preservation.",
+      "Low tolerance for market volatility."
+    ]
+  },
+
+  {
+    "client_id": "EJ-CL-31788",
+    "name": "Rajesh Patel",
+    "age": 45,
+    "marital_status": "Married",
+    "dependents": 2,
+    "occupation": "Small Business Owner",
+    "annual_income_usd": 240000,
+    "net_worth_usd": 2100000,
+    "risk_tolerance": "Growth",
+    "investment_experience": "Advanced",
+    "financial_goals": [
+      {
+        "goal_type": "Business Expansion",
+        "target_year": 2028,
+        "target_amount_usd": 600000,
+        "priority": "High"
+      },
+      {
+        "goal_type": "Early Retirement",
+        "target_age": 58,
+        "priority": "Medium"
+      }
+    ],
+    "life_events": [
+      {
+        "event": "Business Acquisition",
+        "date": "2024-09-01",
+        "impact": "Increased liquidity needs"
+      }
+    ],
+    "advisor_notes": [
+      "Comfortable with market fluctuations.",
+      "Interested in tax-efficient strategies."
+    ]
+  },
+
+  {
+    "client_id": "EJ-CL-40956",
+    "name": "Emily Rodriguez",
+    "age": 34,
+    "marital_status": "Single",
+    "dependents": 0,
+    "occupation": "Product Manager",
+    "annual_income_usd": 145000,
+    "net_worth_usd": 420000,
+    "risk_tolerance": "Aggressive",
+    "investment_experience": "Intermediate",
+    "financial_goals": [
+      {
+        "goal_type": "Wealth Accumulation",
+        "target_year": 2045,
+        "priority": "High"
+      },
+      {
+        "goal_type": "First Home Purchase",
+        "target_year": 2029,
+        "target_amount_usd": 150000,
+        "priority": "Medium"
+      }
+    ],
+    "life_events": [],
+    "advisor_notes": [
+      "Long investment horizon.",
+      "Interested in ESG investing."
+    ]
+  },
+
+  {
+    "client_id": "EJ-CL-55201",
+    "name": "Michael Thompson",
+    "age": 58,
+    "marital_status": "Married",
+    "dependents": 1,
+    "occupation": "Manufacturing Operations Director",
+    "annual_income_usd": 165000,
+    "net_worth_usd": 1750000,
+    "risk_tolerance": "Moderate",
+    "investment_experience": "Intermediate",
+    "financial_goals": [
+      {
+        "goal_type": "Retirement",
+        "target_age": 63,
+        "target_amount_usd": 2300000,
+        "priority": "High"
+      },
+      {
+        "goal_type": "Healthcare Planning",
+        "priority": "Medium"
+      }
+    ],
+    "life_events": [
+      {
+        "event": "Health Scare",
+        "date": "2024-02-10",
+        "impact": "Increased focus on liquidity"
+      }
+    ],
+    "advisor_notes": [
+      "Wants clarity on retirement readiness.",
+      "Concerned about healthcare costs."
+    ]
+  },
+
+  {
+    "client_id": "EJ-CL-66872",
+    "name": "Sophia Nguyen",
+    "age": 29,
+    "marital_status": "Married",
+    "dependents": 1,
+    "occupation": "UX Designer",
+    "annual_income_usd": 110000,
+    "net_worth_usd": 185000,
+    "risk_tolerance": "Growth",
+    "investment_experience": "Basic",
+    "financial_goals": [
+      {
+        "goal_type": "Child Education",
+        "target_year": 2043,
+        "priority": "High"
+      },
+      {
+        "goal_type": "Emergency Fund",
+        "target_amount_usd": 60000,
+        "priority": "High"
+      }
+    ],
+    "life_events": [
+      {
+        "event": "New Child",
+        "date": "2025-01-12",
+        "impact": "Shift toward long-term planning"
+      }
+    ],
+    "advisor_notes": [
+      "Interested in simple, automated strategies.",
+      "Values clear explanations."
+    ]
+  }
+]

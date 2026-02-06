@@ -1,0 +1,23 @@
+[
+  {
+    "date": "2026-01-25",
+    "headline": "Federal Reserve Signals Possible Rate Cuts Later This Year",
+    "category": "Interest Rates",
+    "impact_summary": "Bond prices may benefit if rates decline, while equity markets could experience short-term volatility.",
+    "affected_assets": ["Fixed Income", "Equities"]
+  },
+  {
+    "date": "2026-01-22",
+    "headline": "US Large-Cap Stocks Show Slower Growth Amid Earnings Pressure",
+    "category": "Equities",
+    "impact_summary": "Large-cap equity funds may face near-term performance pressure due to margin concerns.",
+    "affected_assets": ["Equities"]
+  },
+  {
+    "date": "2026-01-18",
+    "headline": "Municipal Bonds Attract Investors Seeking Tax Efficiency",
+    "category": "Fixed Income",
+    "impact_summary": "Increased interest in municipal bonds for high-income investors due to tax advantages.",
+    "affected_assets": ["Municipal Bonds"]
+  }
+]

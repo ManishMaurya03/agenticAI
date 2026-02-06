@@ -1,0 +1,59 @@
+{
+  "portfolio_id": "PF-88921",
+  "as_of_date": "2026-01-31",
+  "total_value_usd": 865000,
+  "asset_allocation": {
+    "equities_percent": 62,
+    "fixed_income_percent": 28,
+    "cash_percent": 6,
+    "alternatives_percent": 4
+  },
+  "holdings": [
+    {
+      "asset_class": "Equity",
+      "name": "US Large Cap Equity Fund",
+      "ticker": "ULCF",
+      "value_usd": 265000,
+      "percent_of_portfolio": 30.6
+    },
+    {
+      "asset_class": "Equity",
+      "name": "International Equity Fund",
+      "ticker": "INTF",
+      "value_usd": 135000,
+      "percent_of_portfolio": 15.6
+    },
+    {
+      "asset_class": "Fixed Income",
+      "name": "Intermediate Bond Fund",
+      "ticker": "IBF",
+      "value_usd": 210000,
+      "percent_of_portfolio": 24.3
+    },
+    {
+      "asset_class": "Fixed Income",
+      "name": "Municipal Bond Fund",
+      "ticker": "MBF",
+      "value_usd": 120000,
+      "percent_of_portfolio": 13.9
+    },
+    {
+      "asset_class": "Cash",
+      "name": "Money Market Fund",
+      "ticker": "MMF",
+      "value_usd": 52000,
+      "percent_of_portfolio": 6.0
+    }
+  ],
+  "performance": {
+    "ytd_return_percent": 5.1,
+    "one_year_return_percent": 9.4,
+    "three_year_annualized_return_percent": 6.8,
+    "benchmark_return_percent": 7.5
+  },
+  "risk_indicators": {
+    "equity_concentration_flag": true,
+    "interest_rate_sensitivity": "Moderate",
+    "volatility_score": "Medium"
+  }
+}
