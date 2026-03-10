@@ -111,6 +111,20 @@ The same platform can extend to:
 
 This is not a single use case — it is a foundation for AI-enabled advisory operations.
 
+One-click client meeting preparation
+	•	Personalized, portfolio-aware insights
+
+	Current Reality:
+	•	45–60 minutes per meeting preparation
+	•	Manual review of client, portfolio, and market data
+	Core Capabilities:
+	•	Understands client goals and life stage
+	•	Analyzes portfolio and risk exposure
+	•	Filters relevant market developments
+	•	Generates compliant advisor talking points
+	50–70% reduction in prep time
+	
+
 ⸻
 
 9️⃣ Closing Statement
