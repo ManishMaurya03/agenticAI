@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Agent Orchestrator System — Production Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Instrument Sans', 'DM Sans', system-ui, sans-serif;
+    background: linear-gradient(160deg, #f8f7f4 0%, #f0efe9 40%, #e8ebe6 100%);
+    min-height: 100vh;
+    display: flex;
+    color: #2d3436;
+  }
+  .sidebar {
+    width: 280px; min-height: 100vh;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(0,0,0,0.06);
+    padding: 32px 16px;
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; flex-shrink: 0;
+  }
+  .sidebar-brand { margin-bottom: 32px; padding-left: 16px; }
+  .sidebar-title { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 700; color: #2d3436; }
+  .sidebar-sub { font-size: 12px; color: #b2bec3; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .sidebar-footer { margin-top: 32px; padding: 16px; background: rgba(0,0,0,0.03); border-radius: 12px; font-size: 12px; color: #999; line-height: 1.5; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 12px; cursor: pointer;
+    transition: all 0.2s ease; font-size: 14px; font-weight: 500;
+    color: #636e72; border: none; background: none;
+    width: 100%; text-align: left; font-family: inherit;
+  }
+  .nav-item:hover { background: rgba(0,0,0,0.04); color: #2d3436; }
+  .nav-item.active { background: #2d3436; color: #fff; font-weight: 600; }
+  .nav-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 14px; border-radius: 8px; flex-shrink: 0; }
+  .nav-item.active .nav-icon { color: #a8e6cf; }
+  .main { flex: 1; padding: 40px 48px; max-width: 920px; overflow-y: auto; }
+  .section-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; background: #e8f5e9; color: #2e7d32; margin-bottom: 12px; }
+  .section-header { font-family: 'Fraunces', Georgia, serif; font-size: 36px; font-weight: 700; color: #2d3436; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .section-intro { font-size: 16px; line-height: 1.7; color: #636e72; margin-bottom: 36px; max-width: 680px; }
+  .card {
+    background: rgba(255,255,255,0.75); backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,0,0,0.05); border-radius: 16px;
+    padding: 28px; margin-bottom: 16px; transition: all 0.2s ease;
+  }
+  .card:hover { border-color: rgba(0,0,0,0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+  .card-title { font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 600; color: #2d3436; margin-bottom: 10px; }
+  .card-desc { font-size: 14.5px; line-height: 1.65; color: #636e72; }
+  .card-desc + .card-desc { margin-top: 6px; }
+  .pillar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 8px; }
+  .pillar-card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid rgba(0,0,0,0.06); text-align: center; }
+  .pillar-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.3; }
+  .pillar-name { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 700; color: #2d3436; margin-bottom: 8px; }
+  .pillar-desc { font-size: 13.5px; color: #636e72; line-height: 1.55; }
+  .layer-badge { display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin-bottom: 12px; }
+  .l1 { background: #e8f5e9; color: #2e7d32; }
+  .l2 { background: #e3f2fd; color: #1565c0; }
+  .l3 { background: #fff3e0; color: #e65100; }
+  .l4 { background: #fce4ec; color: #c62828; }
+  .l5 { background: #f3e5f5; color: #7b1fa2; }
+  .item-bullet { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 14px; line-height: 1.6; color: #4a4a4a; }
+  .bullet-dot { width: 6px; height: 6px; border-radius: 50%; background: #b2bec3; flex-shrink: 0; margin-top: 8px; }
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .do-box, .dont-box { padding: 14px 16px; border-radius: 10px; font-size: 13px; line-height: 1.55; }
+  .do-box { background: #e8f5e9; color: #2e7d32; border-left: 3px solid #66bb6a; }
+  .dont-box { background: #fce4ec; color: #c62828; border-left: 3px solid #ef5350; }
+  .do-label, .dont-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .phase-gate { background: linear-gradient(135deg, #fff8e1, #fff3c4); border: 1px solid #ffe082; border-radius: 10px; padding: 14px 16px; margin-top: 14px; font-size: 13.5px; color: #f57f17; font-weight: 500; }
+  .phase-gate strong { color: #e65100; }
+  .pattern-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .pattern-field { padding: 10px 14px; border-radius: 8px; background: rgba(0,0,0,0.025); font-size: 13px; line-height: 1.5; }
+  .pattern-field-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: #999; margin-bottom: 3px; }
+  .freq-tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: #e3f2fd; color: #1565c0; margin-top: 10px; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.75); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 20px; }
+  .progress-track { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #2d3436; border-radius: 4px; transition: width 0.3s ease; }
+  .progress-fill.done { background: #66bb6a; }
+  .progress-label { font-size: 14px; font-weight: 600; color: #2d3436; white-space: nowrap; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 14px; line-height: 1.5; color: #4a4a4a; border-bottom: 1px solid rgba(0,0,0,0.04); }
+  .check-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid #ccc; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; background: #fff; font-size: 11px; color: transparent; user-select: none; }
+  .check-box.checked { background: #2d3436; border-color: #2d3436; color: white; }
+  .check-text.checked-text { opacity: 0.5; text-decoration: line-through; }
+
+  /* Architecture diagram styles */
+  .arch-diagram { background: #fff; border-radius: 14px; padding: 28px; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 24px; overflow-x: auto; }
+  .arch-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 10px 0; flex-wrap: wrap; }
+  .arch-box { padding: 12px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-align: center; min-width: 130px; transition: transform 0.2s; }
+  .arch-box:hover { transform: translateY(-2px); }
+  .arch-user { background: #e3f2fd; color: #1565c0; border: 2px solid #90caf9; }
+  .arch-orchestrator { background: #2d3436; color: #fff; border: 2px solid #2d3436; font-size: 14px; padding: 16px 24px; }
+  .arch-agent { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
+  .arch-tool { background: #fff3e0; color: #e65100; border: 2px solid #ffcc80; font-size: 12px; padding: 8px 14px; min-width: 100px; }
+  .arch-infra { background: #fce4ec; color: #c62828; border: 2px solid #ef9a9a; font-size: 12px; }
+  .arch-memory { background: #f3e5f5; color: #7b1fa2; border: 2px solid #ce93d8; }
+  .arch-arrow { font-size: 20px; color: #b2bec3; }
+  .arch-arrow-down { text-align: center; font-size: 20px; color: #b2bec3; margin: 4px 0; }
+  .arch-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin: 16px 0 6px 0; text-align: center; }
+
+  /* Code block */
+  .code-block { background: #2d3436; color: #dfe6e9; border-radius: 10px; padding: 18px 20px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12.5px; line-height: 1.7; overflow-x: auto; margin: 14px 0; white-space: pre; }
+  .code-comment { color: #636e72; }
+  .code-key { color: #a8e6cf; }
+  .code-str { color: #ffeaa7; }
+  .code-fn { color: #74b9ff; }
+
+  /* Flow step */
+  .flow-step { display: flex; gap: 16px; margin-bottom: 20px; }
+  .flow-num { width: 36px; height: 36px; border-radius: 50%; background: #2d3436; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .flow-body { flex: 1; }
+  .flow-title { font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600; color: #2d3436; margin-bottom: 4px; }
+  .flow-desc { font-size: 14px; line-height: 1.6; color: #636e72; }
+
+  /* Subheading inside cards */
+  .card-sub { font-size: 13px; font-weight: 600; color: #2d3436; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 8px 0; }
+
+  .mobile-menu-btn { display: none; position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%; background: #2d3436; color: #fff; border: none; font-size: 22px; cursor: pointer; z-index: 101; box-shadow: 0 4px 16px rgba(0,0,0,0.2); align-items: center; justify-content: center; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 99; }
+  .overlay.open { display: block; }
+  @media (max-width: 840px) {
+    .sidebar { display: none; }
+    .sidebar.mobile-open { display: block; position: fixed; z-index: 100; top: 0; left: 0; width: 280px; height: 100vh; box-shadow: 4px 0 24px rgba(0,0,0,0.08); }
+    .main { padding: 24px 20px; }
+    .mobile-menu-btn { display: flex; }
+    .do-dont, .pattern-meta { grid-template-columns: 1fr; }
+    .arch-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-title">Multi-Agent System</div>
+    <div class="sidebar-sub">Orchestrator Pattern Guide</div>
+  </div>
+  <div id="nav-container"></div>
+  <div class="sidebar-footer">Use case: Customer Service Chatbot. A production-grade reference for building multi-agent orchestrator systems end-to-end.</div>
+</div>
+<div class="overlay" id="overlay"></div>
+<button class="mobile-menu-btn" id="mobileBtn">☰</button>
+<div class="main" id="main"></div>
+
+<script>
+const sections = [
+  { id:"overview", icon:"◈", title:"System Overview", intro:"A multi-agent orchestrator system decomposes complex tasks across specialised agents coordinated by a central orchestrator. This guide walks through every component end-to-end, using a production customer service chatbot as the reference use case." },
+  { id:"architecture", icon:"◇", title:"Architecture", intro:"The orchestrator pattern follows a hub-and-spoke topology. The orchestrator is the single entry point that classifies intent, selects the right specialist agent, manages state, and assembles the final response. Here is the full architecture and every component explained." },
+  { id:"agents", icon:"△", title:"Agent Design", intro:"Each specialist agent in the system is purpose-built for a narrow domain. This section covers how to design, scope, and implement each agent in the customer service chatbot — from order lookup to complaint resolution." },
+  { id:"tools", icon:"⬡", title:"Tool Use & Integration", intro:"Agents derive their power from tools — APIs, databases, knowledge bases, and external services. This section covers how to design tool schemas, enforce safe usage, handle failures, and integrate with real systems." },
+  { id:"memory", icon:"○", title:"Memory System", intro:"Memory transforms a stateless LLM into a contextual agent that remembers conversations, customer history, and learned preferences. This section covers every memory layer from short-term buffers to long-term knowledge stores." },
+  { id:"security", icon:"◆", title:"Security", intro:"A multi-agent system with tool access is a high-value attack surface. Prompt injection, data exfiltration, privilege escalation, and tool misuse are all real risks. This section covers defence in depth." },
+  { id:"reliability", icon:"◻", title:"Reliability", intro:"Production agents must handle failures gracefully — LLM timeouts, tool errors, hallucinations, infinite loops, and unexpected inputs. This section covers every pattern for building a system that stays up." },
+  { id:"observability", icon:"☆", title:"Observability", intro:"You cannot improve what you cannot see. Observability for multi-agent systems means tracing every decision, tool call, token, and handoff across the full agent pipeline — and alerting before users notice problems." },
+  { id:"cost", icon:"◎", title:"Cost Optimisation", intro:"Multi-agent systems can be expensive. Every orchestrator decision, every agent call, and every tool invocation costs tokens and time. This section covers strategies to keep costs under control without sacrificing quality." },
+  { id:"flow", icon:"▷", title:"End-to-End Flow", intro:"Let's trace a real customer request through the entire system — from the moment a user types a message to the final response — showing every component in action." },
+  { id:"deployment", icon:"✓", title:"Deployment Checklist", intro:"Before going to production, verify every component against this checklist. Each item maps back to a section in this guide." },
+];
+
+let activeSection = "overview";
+let checkedItems = {};
+
+function buildNav() {
+  const c = document.getElementById("nav-container");
+  c.innerHTML = sections.map(s =>
+    `<button class="nav-item ${s.id===activeSection?'active':''}" data-id="${s.id}"><span class="nav-icon">${s.icon}</span>${s.title}</button>`
+  ).join("");
+  c.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => { activeSection=b.dataset.id; buildNav(); buildMain(); closeMobile(); }));
+}
+function closeMobile() { document.getElementById("sidebar").classList.remove("mobile-open"); document.getElementById("overlay").classList.remove("open"); document.getElementById("mobileBtn").textContent="☰"; }
+document.getElementById("mobileBtn").addEventListener("click", () => { const s=document.getElementById("sidebar"); const o=s.classList.toggle("mobile-open"); document.getElementById("overlay").classList.toggle("open",o); document.getElementById("mobileBtn").textContent=o?"✕":"☰"; });
+document.getElementById("overlay").addEventListener("click", closeMobile);
+
+function bl(items) { return items.map(i=>`<div class="item-bullet"><div class="bullet-dot"></div><span>${i}</span></div>`).join(""); }
+
+// ============================
+// CONTENT DATA
+// ============================
+
+const overviewPillars = [
+  { icon:"◈", name:"Orchestrator", desc:"Central brain that classifies intent, routes to agents, manages conversation flow, and assembles responses." },
+  { icon:"◇", name:"Specialist Agents", desc:"Narrow-domain agents: order lookup, billing, technical support, complaints, FAQ — each with its own prompt, tools, and guardrails." },
+  { icon:"△", name:"Tool Layer", desc:"APIs, databases, knowledge bases, and external services that agents invoke to take real actions and retrieve real data." },
+  { icon:"○", name:"Memory", desc:"Short-term (conversation), working (session), and long-term (customer profile) memory layers that persist context across turns." },
+  { icon:"◆", name:"Security", desc:"Input validation, output filtering, tool permissions, PII masking, and audit logging that protect every layer of the system." },
+  { icon:"◻", name:"Observability", desc:"Distributed tracing, cost dashboards, quality scoring, and alerting across all agents, tools, and LLM calls." },
+];
+
+const archComponents = [
+  { name:"API Gateway / Chat Interface", cls:"l2", items:[
+    "WebSocket or REST endpoint receiving customer messages",
+    "Authentication and rate limiting at the edge",
+    "Session management — maps each conversation to a session ID",
+    "Load balancing across orchestrator instances",
+    "Input sanitisation — strips malicious payloads before they reach the orchestrator",
+  ]},
+  { name:"Orchestrator Agent", cls:"l1", items:[
+    "Receives sanitised user message + conversation history + customer context",
+    "Runs intent classification — determines which specialist agent should handle this turn",
+    "Manages the conversation state machine (greeting → active → escalation → resolution → closing)",
+    "Handles multi-turn context — knows when to continue with the current agent vs. re-route",
+    "Assembles the final response from the specialist agent, applies brand voice, and returns to user",
+    "Enforces guardrails — blocks harmful outputs, applies PII redaction, checks response quality",
+    "Decides when to escalate to a human agent based on confidence scores and policy rules",
+  ]},
+  { name:"Specialist Agents (5 agents)", cls:"l3", items:[
+    "Order Agent — lookups, tracking, modifications, cancellations via Order API",
+    "Billing Agent — payment issues, refunds, invoice queries via Billing API",
+    "Technical Support Agent — troubleshooting, diagnostics, guided resolution via Knowledge Base + Diagnostic API",
+    "Complaints Agent — sentiment-aware handling, escalation protocols, compensation authority via CRM + Policy Engine",
+    "FAQ Agent — general questions answered from a curated knowledge base with RAG retrieval",
+  ]},
+  { name:"Tool & Integration Layer", cls:"l4", items:[
+    "Order Management System (OMS) — REST API for order CRUD operations",
+    "Billing Platform — payment gateway, invoice system, refund processor",
+    "Knowledge Base — vector store (Pinecone/Weaviate/Qdrant) with RAG retrieval pipeline",
+    "CRM System — customer profiles, interaction history, preference data",
+    "Notification Service — email, SMS, push notifications for confirmations and updates",
+    "Human Handoff Queue — routes conversations to live agents when AI confidence is low",
+  ]},
+  { name:"Memory & State Layer", cls:"l5", items:[
+    "Short-term memory — current conversation buffer (last N turns, sliding window)",
+    "Working memory — session-scoped scratchpad for multi-step tasks (e.g. refund in progress)",
+    "Long-term memory — persistent customer profile, past interactions, preferences, stored in vector DB + relational DB",
+    "Shared memory bus — allows orchestrator and agents to read/write session state without passing entire history",
+  ]},
+];
+
+const agentDesigns = [
+  {
+    name: "Orchestrator Agent (The Brain)",
+    desc: "The orchestrator is NOT a specialist — it's a router, state manager, and quality gate. It should be fast, cheap, and reliable. Use a smaller/faster model for the orchestrator if possible.",
+    system_prompt: `You are the Customer Service Orchestrator.
+
+ROLE: Route customer requests to the correct specialist agent. Never answer domain questions yourself.
+
+AVAILABLE AGENTS:
+- order_agent: Order tracking, modifications, cancellations
+- billing_agent: Payments, refunds, invoices
+- tech_support_agent: Product troubleshooting, diagnostics
+- complaints_agent: Complaints, escalations, compensation
+- faq_agent: General questions, policies, how-to
+
+DECISION PROCESS:
+1. Read the customer message and conversation history
+2. Classify intent into one of the agent domains
+3. If ambiguous, ask ONE clarifying question
+4. Route to the selected agent with context summary
+5. If confidence < 0.7, escalate to human
+
+OUTPUT FORMAT:
+{"agent": "agent_name", "context_summary": "...", "confidence": 0.0-1.0}`,
+    tips: [
+      "Use a fast model (e.g. Claude Haiku or GPT-4o-mini) — the orchestrator runs on every turn",
+      "Keep the orchestrator's system prompt short and structured — it's making routing decisions, not writing prose",
+      "Include a confidence score in the output — this drives human escalation thresholds",
+      "The orchestrator should carry conversation state, not individual agents — agents are stateless workers",
+      "Implement a 'continuation' check — if the user's follow-up is in the same domain, skip re-classification",
+    ],
+  },
+  {
+    name: "Order Agent",
+    desc: "Handles all order-related queries: tracking, modifications, cancellations, return initiation. Has read/write access to the Order Management System (OMS).",
+    system_prompt: `You are the Order Specialist Agent.
+
+CAPABILITIES:
+- Look up orders by order ID, email, or phone number
+- Provide real-time tracking status
+- Modify orders (address, items) if status is 'processing'
+- Initiate cancellations if status is 'processing' or 'shipped'
+- Start return/exchange process for delivered orders
+
+TOOLS: get_order, update_order, cancel_order, initiate_return
+
+RULES:
+- ALWAYS verify customer identity before showing order details
+- NEVER modify or cancel without explicit customer confirmation
+- If order is beyond modification window, explain why and offer alternatives
+- For high-value orders (>$500), require supervisor approval for cancellation`,
+    tips: [
+      "Identity verification is critical — the agent must confirm customer identity before revealing any order data",
+      "Implement a confirmation loop for destructive actions (cancel, modify) — the agent should summarise the change and wait for 'yes'",
+      "Use tool-level permissions: read-only by default, write only when the customer explicitly requests a change",
+      "Log every write operation with customer confirmation timestamp for audit trails",
+    ],
+  },
+  {
+    name: "Billing Agent",
+    desc: "Handles payment queries, invoice disputes, refund processing, and subscription management. Has access to the billing platform with tiered write permissions.",
+    system_prompt: `You are the Billing Specialist Agent.
+
+CAPABILITIES:
+- Look up invoices and payment history
+- Explain charges and line items
+- Process refunds up to $100 automatically
+- Escalate refunds >$100 for supervisor approval
+- Update payment methods (redirect to secure portal)
+
+TOOLS: get_invoices, get_payment_history, process_refund, escalate_refund
+
+RULES:
+- NEVER ask for or store full credit card numbers
+- Refunds >$100 MUST go through escalation — do not override
+- Always provide a refund reference number after processing
+- For disputed charges, collect details and create a dispute ticket`,
+    tips: [
+      "Financial operations need the strictest guardrails — implement hard spending limits in the tool layer, not just the prompt",
+      "PII sensitivity is highest here — mask card numbers, route payment method changes to secure portals",
+      "Implement idempotency on refund operations — if the same refund is requested twice, detect and block the duplicate",
+      "Every financial action must be logged with a traceable transaction ID",
+    ],
+  },
+  {
+    name: "Technical Support Agent",
+    desc: "Handles product troubleshooting, diagnostics, and guided resolution. Uses RAG over the knowledge base and can run diagnostic tools.",
+    system_prompt: `You are the Technical Support Specialist Agent.
+
+CAPABILITIES:
+- Search the product knowledge base for troubleshooting guides
+- Run remote diagnostics on customer's account/product
+- Walk customers through step-by-step resolution
+- Escalate to engineering if issue is a known bug or unresolvable
+
+TOOLS: search_knowledge_base, run_diagnostics, create_support_ticket, escalate_to_engineering
+
+RULES:
+- Always search the knowledge base BEFORE attempting a diagnosis
+- Present solutions step-by-step — confirm each step before proceeding
+- If the issue matches a known bug, acknowledge it and provide the ETA if available
+- After 3 failed resolution attempts, offer human agent escalation`,
+    tips: [
+      "RAG quality is everything here — invest heavily in your knowledge base indexing, chunking strategy, and retrieval pipeline",
+      "Implement a 'resolution tracker' in working memory — the agent should know which steps have been tried and their outcomes",
+      "Use structured diagnostic outputs — the agent should parse tool results, not dump raw JSON on the customer",
+      "Set a max-attempts limit — after N failed steps, auto-escalate rather than frustrating the customer",
+    ],
+  },
+  {
+    name: "Complaints Agent",
+    desc: "Handles escalated complaints, manages sentiment, offers compensation within policy, and routes to human agents for severe cases.",
+    system_prompt: `You are the Complaints Specialist Agent.
+
+CAPABILITIES:
+- Acknowledge customer frustration with empathy
+- Review full interaction history for context
+- Offer compensation per policy (credits, discounts, free shipping)
+- Create complaint tickets with severity classification
+- Escalate to human for severe complaints or legal mentions
+
+TOOLS: get_interaction_history, apply_compensation, create_complaint_ticket, escalate_to_human
+
+RULES:
+- ALWAYS lead with empathy — acknowledge the customer's experience before problem-solving
+- Compensation tiers: Tier 1 (minor, <$25 credit), Tier 2 (moderate, <$75 credit), Tier 3 (severe, human escalation)
+- If customer mentions legal action, lawyer, or regulatory body → immediate human escalation
+- Never argue with the customer or assign blame`,
+    tips: [
+      "Sentiment analysis should run on every customer message — if sentiment drops sharply, consider proactive escalation",
+      "The complaints agent needs access to the FULL conversation history, not just the last few turns",
+      "Compensation authority must be enforced at the tool level — the prompt says '$25 max' but the API should reject higher amounts",
+      "This agent benefits from a higher-quality model — empathetic, nuanced responses are worth the extra cost here",
+    ],
+  },
+  {
+    name: "FAQ Agent",
+    desc: "Answers general questions from a curated knowledge base using RAG. No write operations — purely informational.",
+    system_prompt: `You are the FAQ Specialist Agent.
+
+CAPABILITIES:
+- Search the curated FAQ knowledge base
+- Answer policy questions (returns, shipping, warranty)
+- Provide product information and comparisons
+- Direct customers to relevant help articles
+
+TOOLS: search_faq_knowledge_base
+
+RULES:
+- ONLY answer questions you can ground in knowledge base results
+- If no relevant results found, say so honestly and offer to connect with a specialist
+- Never fabricate policies or make promises
+- Cite the source document when answering`,
+    tips: [
+      "This is the cheapest agent — use the fastest, cheapest model since it's just retrieval + summarisation",
+      "Implement answer grounding checks — compare the response against the retrieved chunks to catch hallucination",
+      "Cache frequent FAQ responses — same questions appear repeatedly, and cached answers are free",
+      "Include a 'was this helpful?' signal that feeds back into knowledge base quality metrics",
+    ],
+  },
+];
+
+const toolDesign = [
+  {
+    name: "Tool Schema Design",
+    desc: "Every tool needs a well-defined schema that the LLM can understand and use correctly. The schema is how the agent knows WHAT a tool does, WHEN to use it, and HOW to call it.",
+    items: [
+      "Use JSON Schema format with clear name, description, and parameter definitions",
+      "The description field is critical — it's the LLM's primary guide for when to use the tool. Be specific: 'Look up a customer order by order ID or email address' not 'Get order'",
+      "Define required vs optional parameters explicitly — LLMs handle optionals poorly if not clearly marked",
+      "Include enum constraints where possible — e.g. status: ['processing', 'shipped', 'delivered', 'cancelled']",
+      "Add examples in the description: 'order_id format: ORD-XXXX-XXXX (e.g. ORD-2024-7891)'",
+      "Limit parameters to what's necessary — every extra parameter is a chance for the LLM to hallucinate a value",
+    ],
+    example: `{
+  "name": "get_order",
+  "description": "Look up a customer order by order ID. Returns order status, items, shipping address, and tracking info. Use when customer asks about order status, tracking, or order details.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "order_id": {
+        "type": "string",
+        "description": "Order ID in format ORD-XXXX-XXXX",
+        "pattern": "^ORD-[0-9]{4}-[0-9]{4}$"
+      }
+    },
+    "required": ["order_id"]
+  }
+}`,
+  },
+  {
+    name: "Tool Permission Model",
+    desc: "Not all agents should have access to all tools. Implement a permission matrix that maps agents to their allowed tools with read/write scoping.",
+    items: [
+      "Define a tool-agent permission matrix — each agent only sees the tools it's allowed to use",
+      "Separate read and write permissions — order_agent can read orders by default but needs explicit grant for write",
+      "Implement tool-level rate limits — billing_agent can process max 3 refunds per session",
+      "Add monetary caps at the tool layer — refund tool rejects amounts above the agent's tier regardless of prompt",
+      "Use short-lived, scoped API tokens — each agent session gets a token with only its permitted scopes",
+      "Log every tool invocation with agent ID, parameters, and result for audit",
+    ],
+  },
+  {
+    name: "Tool Response Handling",
+    desc: "Raw API responses are often not suitable for direct LLM consumption. Transform, validate, and sanitise tool outputs before feeding them back to the agent.",
+    items: [
+      "Transform API responses into a structured, LLM-friendly format — strip unnecessary fields, flatten nested objects",
+      "Redact PII from tool responses before they enter the LLM context — mask card numbers, truncate emails",
+      "Handle tool errors gracefully — return structured error messages the agent can interpret, not raw stack traces",
+      "Implement response size limits — truncate large results to prevent context window overflow",
+      "Add metadata to responses: { 'status': 'success', 'source': 'order_api', 'cached': false, 'latency_ms': 142 }",
+      "Validate response schemas — if the API returns unexpected data, catch it before the agent tries to use it",
+    ],
+  },
+  {
+    name: "Tool Failure & Retry Strategy",
+    desc: "Tools fail. APIs time out, databases go down, rate limits trigger. Every tool call needs a failure handling strategy.",
+    items: [
+      "Implement exponential backoff with jitter for retries — max 3 retries with 1s, 2s, 4s delays",
+      "Set hard timeout limits per tool: fast tools (DB lookup) 3s, medium (API calls) 10s, slow (search/RAG) 15s",
+      "Define fallback responses for each tool — if order lookup fails, say 'I'm having trouble accessing order details right now' not 'Error 500'",
+      "Circuit breaker pattern — if a tool fails 5 times in 60 seconds, stop calling it and use fallback for all agents",
+      "Distinguish retriable vs non-retriable errors — 429 (rate limit) is retriable, 404 (not found) is not",
+      "Log all failures with correlation IDs for debugging across the distributed system",
+    ],
+  },
+];
+
+const memoryLayers = [
+  {
+    name: "Short-Term Memory (Conversation Buffer)",
+    desc: "The most recent turns of the current conversation. This is what the agent 'sees' as immediate context.",
+    how: "Sliding window of the last N messages (typically 10–20 turns). Stored in-memory or Redis. Passed to every LLM call as the messages array.",
+    impl: `// Conversation buffer with sliding window
+class ConversationBuffer {
+  constructor(maxTurns = 15) {
+    this.maxTurns = maxTurns;
+    this.messages = [];
+  }
+
+  add(role, content) {
+    this.messages.push({ role, content, ts: Date.now() });
+    if (this.messages.length > this.maxTurns * 2) {
+      // Keep system prompt + trim oldest turns
+      this.messages = [
+        this.messages[0],           // system prompt
+        ...this.messages.slice(-this.maxTurns * 2)
+      ];
+    }
+  }
+
+  getContext() { return this.messages; }
+}`,
+    tips: [
+      "Size the window carefully — too small loses context, too large wastes tokens and money",
+      "When trimming, always keep the system prompt and the most recent user message",
+      "Consider summarising trimmed messages into a 'conversation summary' that persists",
+      "Store timestamps — they help agents understand time gaps between messages",
+    ],
+  },
+  {
+    name: "Working Memory (Session Scratchpad)",
+    desc: "A structured scratchpad for multi-step tasks within a single session. Tracks what the agent is currently doing.",
+    how: "Key-value store scoped to the session. Agents read/write structured data like 'current_task', 'steps_completed', 'pending_actions'. Stored in Redis with TTL.",
+    impl: `// Working memory for multi-step task tracking
+class WorkingMemory {
+  constructor(sessionId, redis) {
+    this.sessionId = sessionId;
+    this.redis = redis;
+    this.ttl = 3600; // 1 hour session timeout
+  }
+
+  async set(key, value) {
+    const k = \`wm:\${this.sessionId}:\${key}\`;
+    await this.redis.set(k, JSON.stringify(value), 'EX', this.ttl);
+  }
+
+  async get(key) {
+    const k = \`wm:\${this.sessionId}:\${key}\`;
+    const v = await this.redis.get(k);
+    return v ? JSON.parse(v) : null;
+  }
+
+  // Agent writes task progress here
+  // e.g. set('refund_flow', {
+  //   step: 'awaiting_confirmation',
+  //   order_id: 'ORD-2024-7891',
+  //   amount: 49.99,
+  //   reason: 'wrong_item'
+  // })
+}`,
+    tips: [
+      "Working memory is the key to multi-step tasks — without it, agents forget what they were doing mid-flow",
+      "The orchestrator reads working memory to decide if a follow-up message is a continuation or a new task",
+      "Set TTLs aggressively — stale working memory causes more bugs than missing memory",
+      "Structure the data — don't dump free text, use typed objects the agent and orchestrator can parse reliably",
+    ],
+  },
+  {
+    name: "Long-Term Memory (Customer Profile)",
+    desc: "Persistent knowledge about the customer that survives across sessions — past interactions, preferences, account details, and learned context.",
+    how: "Dual storage: structured data in PostgreSQL (orders, tickets, preferences) + unstructured interaction summaries in a vector database for semantic retrieval.",
+    impl: `// Long-term memory: structured + vector hybrid
+class LongTermMemory {
+  constructor(customerId, db, vectorStore) {
+    this.customerId = customerId;
+    this.db = db;           // PostgreSQL
+    this.vectorStore = vectorStore;  // Pinecone/Qdrant
+  }
+
+  async getProfile() {
+    // Structured: account details, order history, preferences
+    return await this.db.query(
+      'SELECT * FROM customer_profiles WHERE id = $1',
+      [this.customerId]
+    );
+  }
+
+  async getRelevantHistory(query, topK = 5) {
+    // Semantic: find past interactions relevant to current query
+    return await this.vectorStore.query({
+      vector: await embed(query),
+      filter: { customer_id: this.customerId },
+      topK: topK,
+    });
+  }
+
+  async saveInteractionSummary(summary) {
+    // After each session, save a summary for future retrieval
+    const embedding = await embed(summary.text);
+    await this.vectorStore.upsert({
+      id: summary.sessionId,
+      vector: embedding,
+      metadata: {
+        customer_id: this.customerId,
+        date: summary.date,
+        topic: summary.topic,
+        resolution: summary.resolution,
+        sentiment: summary.sentiment,
+      }
+    });
+  }
+}`,
+    tips: [
+      "Separate structured data (orders, account info) from unstructured data (interaction summaries) — use the right store for each",
+      "Vector search is for 'what did we discuss about X before?' — semantic similarity, not exact lookup",
+      "Summarise sessions at the end, don't store raw transcripts — summaries are cheaper to store and retrieve",
+      "Include sentiment in interaction summaries — this helps the complaints agent understand the customer's history with your brand",
+      "Implement data retention policies — delete or anonymise interaction data per GDPR/privacy requirements",
+    ],
+  },
+  {
+    name: "Shared Memory Bus",
+    desc: "A communication channel that lets the orchestrator and agents share state without passing the entire conversation history to every agent.",
+    how: "A session-scoped shared object that the orchestrator populates before routing to an agent, and the agent can update after completing its task.",
+    impl: `// Shared context passed between orchestrator and agents
+const sharedContext = {
+  // Orchestrator writes before routing:
+  customer_id: "CUST-8842",
+  customer_name: "Sarah",
+  customer_tier: "premium",
+  verified: true,
+  current_intent: "order_tracking",
+  conversation_summary: "Customer asking about delayed order ORD-2024-7891",
+
+  // Agent writes after completing task:
+  agent_result: {
+    agent: "order_agent",
+    status: "resolved",
+    actions_taken: ["looked_up_order", "provided_tracking"],
+    follow_up_needed: false,
+  },
+
+  // Orchestrator reads to compose final response
+};`,
+    tips: [
+      "The shared context is the contract between orchestrator and agents — define it as a typed schema",
+      "Keep it lean — only include what agents need to do their job, not the full conversation",
+      "The orchestrator owns the shared context — agents can read it all but only write to their designated fields",
+      "Include customer verification status — agents should not re-verify if the orchestrator already did",
+    ],
+  },
+];
+
+const securityDomains = [
+  { name:"Prompt Injection Defence", items:[
+    "Separate system prompts from user content — use the LLM's native system/user/assistant roles, never concatenate user input into system prompts",
+    "Implement input sanitisation middleware — strip common injection patterns (e.g. 'ignore previous instructions', 'you are now...', XML/JSON injections)",
+    "Use a classifier model or regex filter to detect injection attempts before they reach the orchestrator",
+    "Indirect injection: sanitise ALL tool outputs before feeding them back to agents — a malicious order note could contain injection text",
+    "Test against OWASP LLM Top 10 injection categories: direct, indirect, multi-turn, cross-agent poisoning",
+    "Implement a response filter that checks agent outputs against a blocklist of patterns (e.g. system prompt leakage, PII exposure)",
+  ]},
+  { name:"Data Protection & PII", items:[
+    "Never pass full credit card numbers, SSNs, or passwords to the LLM — mask in the tool response layer",
+    "Implement PII detection (regex + NER model) on all agent outputs before sending to the user",
+    "Scope customer data access: agents only see data relevant to their domain (billing agent doesn't see medical records)",
+    "Encrypt conversation logs at rest and in transit — use AES-256 for storage, TLS 1.3 for transit",
+    "Implement data retention policies — auto-delete conversation logs after N days per compliance requirements",
+    "Maintain a data flow map showing exactly where customer data travels: input → orchestrator → agent → tool → response",
+  ]},
+  { name:"Tool & API Security", items:[
+    "Each agent gets a scoped API token — order_agent cannot call billing APIs even if it tries to",
+    "Implement server-side tool execution — the LLM generates tool calls, but a secure middleware actually executes them",
+    "Validate all tool parameters against the schema before execution — reject calls with unexpected fields or types",
+    "Monetary guardrails at the API layer: max refund amount, max discount percentage, max operations per session",
+    "Implement idempotency keys for all write operations — prevent duplicate refunds, duplicate cancellations",
+    "Audit log every tool invocation: who (agent), what (tool + params), when (timestamp), result (success/fail), correlation ID",
+  ]},
+  { name:"Agent Isolation & Access Control", items:[
+    "Each agent runs in its own execution context — one compromised agent cannot access another's tools or memory",
+    "The orchestrator is the only component that can route between agents — agents cannot call each other directly",
+    "Implement agent-level rate limiting — max N tool calls per turn, max M turns per session per agent",
+    "Human escalation cannot be bypassed — if the confidence threshold or policy rule says 'escalate', no agent can override it",
+    "Disable agent self-modification — agents cannot alter their own system prompts or tool definitions at runtime",
+    "Implement a 'dead man's switch' — if an agent exceeds its max execution time (e.g. 30s), forcibly terminate and return a safe fallback",
+  ]},
+];
+
+const reliabilityPatterns = [
+  {
+    name: "Circuit Breaker",
+    desc: "Prevent cascading failures when a downstream service is down. After N consecutive failures, stop calling the service and return a graceful fallback.",
+    when: "Any tool or API that can fail — order API, billing API, knowledge base, external services",
+    how: "Track failure count per tool. After 5 failures in 60s → OPEN circuit → return fallback response. After 30s → HALF-OPEN → try one request. If it succeeds → CLOSED. If it fails → OPEN again.",
+    strengths: "Prevents wasting tokens and time on calls that will fail; protects downstream services from overload",
+    risks: "Overly aggressive thresholds can block valid requests; needs careful tuning per service",
+  },
+  {
+    name: "Retry with Exponential Backoff",
+    desc: "Automatically retry transient failures with increasing delays to avoid thundering herd problems.",
+    when: "Transient errors: 429 (rate limit), 503 (service unavailable), network timeouts",
+    how: "Retry up to 3 times: 1s → 2s → 4s with random jitter (±500ms). Do NOT retry 4xx client errors (except 429) or LLM content policy errors.",
+    strengths: "Handles the majority of transient failures automatically; jitter prevents request clustering",
+    risks: "Can increase latency significantly if service is truly down; wasted tokens on retried LLM calls",
+  },
+  {
+    name: "Fallback Agent Chain",
+    desc: "If the primary agent fails, fall back to a simpler agent or a pre-written response rather than returning an error.",
+    when: "LLM call failures, agent timeout, content policy blocks",
+    how: "Primary (specialist agent) → Fallback (FAQ agent with broad knowledge) → Static (pre-written response for common intents) → Human escalation",
+    strengths: "Ensures the customer always gets a response; graceful degradation preserves user experience",
+    risks: "Fallback quality is lower; customers may notice the difference; need to track fallback rates as a quality metric",
+  },
+  {
+    name: "Idempotent Operations",
+    desc: "Ensure that performing the same action twice produces the same result — critical for financial operations and state changes.",
+    when: "All write operations: refunds, cancellations, order modifications, ticket creation",
+    how: "Generate a unique idempotency key per user action. Tool layer checks if this key has been processed before. If yes, return the cached result. If no, execute and store.",
+    strengths: "Eliminates duplicate refunds, double cancellations, and other costly duplicates",
+    risks: "Adds storage overhead for idempotency key cache; needs TTL to prevent unbounded growth",
+  },
+  {
+    name: "Timeout Hierarchy",
+    desc: "Layer timeouts from individual tools up to the full request to ensure no request hangs indefinitely.",
+    when: "Every layer of the system — tool calls, agent turns, orchestrator routing, full request",
+    how: "Tool call: 3–15s (varies by tool) → Agent turn: 30s → Orchestrator full cycle: 45s → Gateway request: 60s. Each layer must handle its timeout and return a usable response.",
+    strengths: "Guarantees bounded response times; prevents resource exhaustion from hung requests",
+    risks: "Aggressive timeouts can kill valid but slow requests (e.g. complex RAG queries); needs tuning",
+  },
+  {
+    name: "Loop Detection & Max Iterations",
+    desc: "Prevent agents from entering infinite tool-call loops or circular reasoning chains.",
+    when: "Any agent with tool access — especially ReAct-style agents that reason in loops",
+    how: "Max 5 tool calls per agent turn. Max 3 orchestrator re-routes per conversation turn. If limits are hit, return the best available response and flag for review.",
+    strengths: "Hard cap on runaway costs and latency; catches hallucination-driven tool spam",
+    risks: "Some legitimate tasks need many tool calls (complex troubleshooting); consider per-agent limits",
+  },
+];
+
+const observabilityComponents = [
+  {
+    name: "Distributed Tracing",
+    desc: "Every customer request generates a trace that follows the message through the gateway → orchestrator → agent → tool → response pipeline. Each span captures latency, inputs, outputs, and metadata.",
+    items: [
+      "Generate a unique trace_id at the API gateway — propagate it through every component",
+      "Create spans for: orchestrator routing, agent LLM calls, tool invocations, memory lookups, response assembly",
+      "Capture token counts (input + output) on every LLM span for cost attribution",
+      "Use OpenTelemetry SDK for instrumentation — it integrates with Jaeger, Datadog, and most observability platforms",
+      "Store full request/response payloads in traces (with PII redacted) for debugging",
+      "Add custom attributes: agent_name, intent_classified, confidence_score, tools_called, fallback_used",
+    ],
+    tag: "Essential",
+  },
+  {
+    name: "Cost Dashboard",
+    desc: "Real-time visibility into token usage, API costs, and per-interaction economics. The most common reason multi-agent systems get shut down is unexpected costs.",
+    items: [
+      "Track cost per conversation — sum of all LLM calls (orchestrator + agents) + tool API costs",
+      "Break down by agent: which agent is the most expensive? Orchestrator, billing, technical support?",
+      "Track cost per intent — 'order tracking' should be cheap, 'complex troubleshooting' is expected to cost more",
+      "Set budget alerts: per-hour, per-day, per-customer, per-conversation thresholds",
+      "Monitor cache hit rates — high cache rates mean you're saving money; low rates mean optimisation opportunity",
+      "Compare cost vs. resolution rate — the cheapest agent is useless if it can't resolve issues",
+    ],
+    tag: "Critical",
+  },
+  {
+    name: "Quality Scoring",
+    desc: "Automated quality metrics that evaluate agent performance without waiting for customer feedback.",
+    items: [
+      "Resolution rate — percentage of conversations resolved without human escalation",
+      "Groundedness score — does the agent's response align with the tool/knowledge base data it retrieved?",
+      "Hallucination detection — compare agent claims against tool responses; flag mismatches",
+      "Sentiment trajectory — is the customer's sentiment improving or degrading during the conversation?",
+      "First-contact resolution — was the issue resolved in one conversation, or did the customer come back?",
+      "Agent confidence calibration — when agents report 0.9 confidence, are they actually correct 90% of the time?",
+    ],
+    tag: "Important",
+  },
+  {
+    name: "Alerting & Anomaly Detection",
+    desc: "Proactive alerts that catch problems before customers complain. The goal is zero-surprise production incidents.",
+    items: [
+      "Latency spikes — alert if p95 response time exceeds 10s (normally ~3-5s)",
+      "Error rate — alert if any agent's error rate exceeds 5% over a 5-minute window",
+      "Cost anomaly — alert if hourly cost exceeds 2x the rolling 7-day average",
+      "Fallback rate — alert if fallback agent activation exceeds 10% (means primary agents are failing)",
+      "Human escalation spike — alert if escalation rate doubles from baseline (may indicate a system issue, not user behaviour)",
+      "Sentiment crash — alert if average conversation sentiment drops below threshold (possible agent quality degradation)",
+    ],
+    tag: "Essential",
+  },
+];
+
+const costStrategies = [
+  {
+    name: "Model Tiering",
+    desc: "Not every component needs the most expensive model. Match model capability to task complexity.",
+    do: "Use a fast, cheap model (Haiku/GPT-4o-mini) for the orchestrator's intent classification. Use a mid-tier model (Sonnet) for most specialist agents. Reserve the top-tier model (Opus) for the complaints agent where nuanced empathy matters.",
+    dont: "Use the most powerful model for every agent 'just in case'. The orchestrator runs on EVERY turn — an expensive model here multiplies cost across the entire system.",
+  },
+  {
+    name: "Response Caching",
+    desc: "Cache identical or semantically similar requests to avoid redundant LLM calls.",
+    do: "Implement a semantic cache: embed the user query, check if a similar query (cosine similarity > 0.95) was answered recently. Cache FAQ responses aggressively (TTL: 24h). Cache tool responses for read-only lookups (TTL: 5min).",
+    dont: "Cache write operations or personalised responses. Don't cache stale data — order status from 5 minutes ago may be wrong.",
+  },
+  {
+    name: "Prompt Optimisation",
+    desc: "Every token in your prompt costs money — and long prompts also degrade LLM performance.",
+    do: "Keep system prompts under 500 tokens. Use structured output formats (JSON) to reduce output tokens. Trim conversation history aggressively — summarise old turns instead of sending full text. Remove redundant instructions that the model already follows.",
+    dont: "Include verbose examples in system prompts that could be in a few-shot cache. Don't send the full customer profile when the agent only needs the order ID.",
+  },
+  {
+    name: "Smart Routing",
+    desc: "The cheapest agent call is the one you don't make. Route simple tasks to cheaper paths.",
+    do: "Use keyword matching or a small classifier to detect simple FAQs before invoking the full orchestrator. Cache the top 50 most common questions with pre-written answers. Use the orchestrator's confidence score to skip agent routing when intent is obvious.",
+    dont: "Route every message through the full orchestrator → agent → tool chain. A 'what are your hours?' question doesn't need a $0.05 multi-agent pipeline.",
+  },
+  {
+    name: "Token Budget Management",
+    desc: "Set and enforce per-conversation and per-agent token budgets to prevent runaway costs.",
+    do: "Set a per-conversation token budget (e.g. 50K tokens total). Track cumulative usage per session. When budget is 80% consumed, switch to shorter responses and faster agents. At 100%, gracefully close with a summary and offer to continue via email.",
+    dont: "Allow unbounded conversations that consume 200K+ tokens. Don't let a single difficult customer conversation burn your daily budget.",
+  },
+  {
+    name: "Batch & Async Operations",
+    desc: "Not everything needs a real-time LLM response. Offload non-urgent tasks to cheaper batch processing.",
+    do: "After-conversation summaries → batch. Interaction quality scoring → batch. Knowledge base updates from resolved tickets → batch. Proactive outreach messages → batch. These can use cheaper models or APIs with lower rate limits.",
+    dont: "Batch anything that affects the real-time customer experience. The customer's current conversation must always be real-time.",
+  },
+];
+
+const endToEndFlow = [
+  { title: "Customer sends message", desc: "\"Hi, I ordered a laptop last week (order ORD-2024-7891) and it still hasn't arrived. I'm really frustrated because I need it for work on Monday.\" — Message arrives at the API Gateway via WebSocket." },
+  { title: "Gateway processing", desc: "API Gateway authenticates the session, applies rate limiting, sanitises the input (checks for injection patterns), attaches the session_id and customer_id from the auth token, and forwards to the Orchestrator." },
+  { title: "Memory hydration", desc: "Orchestrator loads context: (1) Short-term memory → last 10 turns of this conversation (this is the first message, so empty). (2) Working memory → no active task in progress. (3) Long-term memory → retrieves customer profile: Sarah, Premium tier, 12 past orders, 1 previous complaint resolved with credit." },
+  { title: "Intent classification", desc: "Orchestrator's LLM call classifies the intent as 'order_tracking' with confidence 0.92. The message mentions an order ID and asks about delivery. Secondary signal: sentiment is negative ('frustrated', 'need it for work'). Orchestrator prepares shared context with customer_id, verified=true, intent, and conversation summary." },
+  { title: "Agent routing", desc: "Orchestrator routes to order_agent with the shared context. The order_agent receives: system prompt + shared context (customer info, intent) + the customer message. It does NOT receive the full conversation history — just what it needs." },
+  { title: "Tool execution", desc: "Order agent calls get_order(order_id='ORD-2024-7891'). Tool layer validates the parameter schema, checks permissions (order_agent has read access), executes the API call to the OMS. Response: order shipped 3 days ago, tracking shows 'in transit — delayed due to weather', estimated delivery: Monday. Tool response is sanitised (PII check) and returned to the agent." },
+  { title: "Agent response generation", desc: "Order agent generates a response using the tool data: acknowledges the frustration (sentiment-aware), provides the tracking status, explains the weather delay, confirms Monday delivery estimate. The agent writes to shared context: agent_result = { status: 'resolved', actions: ['order_lookup', 'tracking_provided'], follow_up: false }." },
+  { title: "Orchestrator post-processing", desc: "Orchestrator reads the agent result. Checks: (1) Response quality — does it address the customer's concern? Yes. (2) Brand voice — is the tone empathetic and professional? Yes. (3) PII scan — any leaked data? No. (4) Sentiment check — given the customer's frustration, should we proactively offer anything? Customer is Premium tier with negative sentiment → orchestrator appends: 'As a valued customer, I've flagged this for priority delivery monitoring.'" },
+  { title: "Response delivery & logging", desc: "Final response sent back through the Gateway to the customer. Simultaneously: (1) Short-term memory updated with this turn. (2) Working memory — no active multi-step task, so nothing to write. (3) Trace completed with all spans: gateway (12ms) → orchestrator routing (850ms) → agent LLM call (1,200ms) → tool call (142ms) → post-processing (380ms). Total: 2,584ms. Cost: orchestrator (280 tokens) + agent (1,100 tokens) + tool API ($0.001) = ~$0.008 total." },
+  { title: "Post-conversation processing (async)", desc: "After the session ends (or after idle timeout): (1) Conversation summary generated and stored in long-term vector memory. (2) Quality scoring runs: groundedness=0.98 (response matched tool data), resolution=true, sentiment_delta=+0.3 (customer calmer after response). (3) Cost attributed to 'order_tracking' intent bucket. (4) Metrics emitted to dashboards." },
+];
+
+const checklistGroups = [
+  { name: "Architecture & Design", checks: [
+    "Orchestrator + specialist agent topology defined and documented",
+    "Each agent has a scoped system prompt, tool set, and permission boundary",
+    "Shared context schema defined as a typed contract between orchestrator and agents",
+    "Intent classification tested against a labelled dataset with >90% accuracy",
+    "Human escalation thresholds defined per agent and per intent category",
+    "Agent fallback chain configured: primary → fallback → static → human",
+  ]},
+  { name: "Tool Integration", checks: [
+    "Every tool has a validated JSON Schema with clear descriptions and examples",
+    "Tool-agent permission matrix documented and enforced at the middleware layer",
+    "Server-side tool execution — LLM never calls APIs directly",
+    "Tool parameter validation in place — rejects malformed or unexpected parameters",
+    "Monetary caps enforced at the tool layer (not just the prompt)",
+    "Idempotency keys implemented for all write operations",
+    "Retry strategy configured per tool with exponential backoff and jitter",
+    "Circuit breaker thresholds set for each external service",
+  ]},
+  { name: "Memory System", checks: [
+    "Short-term memory: sliding window sized and tested (token count within budget)",
+    "Working memory: session-scoped with TTL, schema defined for multi-step tasks",
+    "Long-term memory: customer profile retrieval tested for latency and relevance",
+    "Vector store indexed with appropriate chunk size and embedding model",
+    "Memory cleanup: TTLs set, data retention policies documented",
+    "Shared context: schema versioned, read/write permissions scoped per agent",
+  ]},
+  { name: "Security", checks: [
+    "Input sanitisation catches common injection patterns before reaching orchestrator",
+    "System prompts isolated from user content using native LLM role separation",
+    "PII detection and masking applied to all tool responses before LLM context",
+    "Agent output filtering catches system prompt leakage and policy violations",
+    "API tokens scoped per agent with minimum necessary permissions",
+    "All tool invocations logged with full audit trail (who, what, when, result)",
+    "Penetration testing completed against OWASP LLM Top 10",
+    "Data encryption: at rest (AES-256) and in transit (TLS 1.3)",
+  ]},
+  { name: "Reliability", checks: [
+    "Circuit breakers configured for all external services with tested thresholds",
+    "Timeout hierarchy: tool (3–15s) → agent (30s) → orchestrator (45s) → gateway (60s)",
+    "Loop detection: max tool calls per turn and max re-routes per conversation enforced",
+    "Fallback responses defined for every tool failure mode",
+    "Kill switch tested — can forcibly shut down all agent activity in <60 seconds",
+    "Load testing completed at 2x expected peak traffic",
+  ]},
+  { name: "Observability", checks: [
+    "Distributed tracing configured with trace_id propagation across all components",
+    "Cost dashboard live: per-conversation, per-agent, per-intent breakdowns",
+    "Quality scoring pipeline running: groundedness, resolution rate, sentiment tracking",
+    "Alerts configured: latency spikes, error rates, cost anomalies, fallback rates",
+    "Logging: structured JSON logs with correlation IDs, no PII in logs",
+    "On-call runbook documented with escalation procedures for each alert type",
+  ]},
+  { name: "Cost Management", checks: [
+    "Model tiering applied: cheap for orchestrator, mid-tier for agents, top-tier only where needed",
+    "Per-conversation token budget set and enforced",
+    "Response caching implemented for FAQ and read-only tool responses",
+    "System prompts optimised for token efficiency (<500 tokens each)",
+    "Keyword pre-filter or classifier handles simple FAQs without full pipeline",
+    "Batch processing configured for non-real-time tasks (summaries, scoring, KB updates)",
+  ]},
+];
+
+
+// ============================
+// RENDER
+// ============================
+function buildMain() {
+  const s = sections.find(x => x.id === activeSection);
+  let h = `<div class="section-tag">${s.icon} ${s.title}</div><h1 class="section-header">${s.title}</h1><p class="section-intro">${s.intro}</p>`;
+
+  if (activeSection === "overview") {
+    h += `<div class="pillar-grid">${overviewPillars.map(p=>`<div class="pillar-card"><div class="pillar-icon">${p.icon}</div><div class="pillar-name">${p.name}</div><div class="pillar-desc">${p.desc}</div></div>`).join("")}</div>`;
+    h += `<div class="card" style="margin-top:24px"><div class="card-title">Use Case: Customer Service Chatbot</div><div class="card-desc">Throughout this guide, we use a production customer service chatbot as the reference implementation. The system handles: order tracking & modifications, billing & refund queries, technical troubleshooting, complaint resolution & escalation, and general FAQ. The chatbot serves a mid-size e-commerce company with ~10,000 conversations/day, supports text-based chat, and must integrate with existing order management, billing, CRM, and knowledge base systems.</div></div>`;
+  }
+
+  if (activeSection === "architecture") {
+    // Visual diagram
+    h += `<div class="arch-diagram">
+      <div class="arch-label">Customer Interface</div>
+      <div class="arch-row"><div class="arch-box arch-user">Customer (Chat UI)</div></div>
+      <div class="arch-arrow-down">↓</div>
+      <div class="arch-row"><div class="arch-box arch-infra">API Gateway — Auth, Rate Limit, Sanitisation</div></div>
+      <div class="arch-arrow-down">↓</div>
+      <div class="arch-label">Brain Layer</div>
+      <div class="arch-row"><div class="arch-box arch-orchestrator">⬡ Orchestrator Agent</div></div>
+      <div class="arch-arrow-down">↓ routes to ↓</div>
+      <div class="arch-label">Specialist Agents</div>
+      <div class="arch-row">
+        <div class="arch-box arch-agent">Order Agent</div>
+        <div class="arch-box arch-agent">Billing Agent</div>
+        <div class="arch-box arch-agent">Tech Support</div>
+        <div class="arch-box arch-agent">Complaints</div>
+        <div class="arch-box arch-agent">FAQ Agent</div>
+      </div>
+      <div class="arch-arrow-down">↓ uses ↓</div>
+      <div class="arch-label">Tool & Integration Layer</div>
+      <div class="arch-row">
+        <div class="arch-box arch-tool">Order API</div>
+        <div class="arch-box arch-tool">Billing API</div>
+        <div class="arch-box arch-tool">Knowledge Base</div>
+        <div class="arch-box arch-tool">CRM</div>
+        <div class="arch-box arch-tool">Notifications</div>
+        <div class="arch-box arch-tool">Human Queue</div>
+      </div>
+      <div class="arch-arrow-down">↕</div>
+      <div class="arch-label">Memory & State Layer</div>
+      <div class="arch-row">
+        <div class="arch-box arch-memory">Short-Term (Buffer)</div>
+        <div class="arch-box arch-memory">Working (Redis)</div>
+        <div class="arch-box arch-memory">Long-Term (Vector + DB)</div>
+        <div class="arch-box arch-memory">Shared Context</div>
+      </div>
+    </div>`;
+    h += archComponents.map((c,i)=>`<div class="card"><span class="layer-badge l${i+1}">${c.name}</span>${bl(c.items)}</div>`).join("");
+  }
+
+  if (activeSection === "agents") {
+    agentDesigns.forEach(a => {
+      h += `<div class="card"><div class="card-title">${a.name}</div><div class="card-desc">${a.desc}</div>`;
+      h += `<div class="card-sub">System Prompt</div><div class="code-block">${a.system_prompt.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+      h += `<div class="card-sub">Implementation Tips</div>${bl(a.tips)}</div>`;
+    });
+  }
+
+  if (activeSection === "tools") {
+    toolDesign.forEach(t => {
+      h += `<div class="card"><div class="card-title">${t.name}</div><div class="card-desc">${t.desc}</div>`;
+      if (t.example) h += `<div class="card-sub">Example Schema</div><div class="code-block">${t.example.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+      h += bl(t.items) + `</div>`;
+    });
+  }
+
+  if (activeSection === "memory") {
+    memoryLayers.forEach(m => {
+      h += `<div class="card"><div class="card-title">${m.name}</div><div class="card-desc">${m.desc}</div>`;
+      h += `<div class="card-desc" style="margin-top:6px"><strong style="color:#2d3436">How it works:</strong> ${m.how}</div>`;
+      h += `<div class="card-sub">Implementation</div><div class="code-block">${m.impl.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+      h += `<div class="card-sub">Key Considerations</div>${bl(m.tips)}</div>`;
+    });
+  }
+
+  if (activeSection === "security") {
+    h += securityDomains.map(d=>`<div class="card"><div class="card-title">${d.name}</div>${bl(d.items)}</div>`).join("");
+  }
+
+  if (activeSection === "reliability") {
+    h += reliabilityPatterns.map(p=>`<div class="card"><div class="card-title">${p.name}</div><div class="card-desc">${p.desc}</div><div class="card-desc" style="margin-top:4px"><strong style="color:#2d3436">When:</strong> ${p.when}</div><div class="card-desc" style="margin-top:4px"><strong style="color:#2d3436">How:</strong> ${p.how}</div><div class="pattern-meta"><div class="pattern-field"><div class="pattern-field-label">Strengths</div>${p.strengths}</div><div class="pattern-field"><div class="pattern-field-label">Risks</div>${p.risks}</div></div></div>`).join("");
+  }
+
+  if (activeSection === "observability") {
+    h += observabilityComponents.map(o=>`<div class="card"><div class="card-title">${o.name}</div><div class="card-desc">${o.desc}</div><div class="freq-tag">${o.tag}</div><div style="margin-top:14px">${bl(o.items)}</div></div>`).join("");
+  }
+
+  if (activeSection === "cost") {
+    h += costStrategies.map(c=>`<div class="card"><div class="card-title">${c.name}</div><div class="card-desc">${c.desc}</div><div class="do-dont"><div class="do-box"><div class="do-label">✓ Do</div>${c.do}</div><div class="dont-box"><div class="dont-label">✕ Don't</div>${c.dont}</div></div></div>`).join("");
+  }
+
+  if (activeSection === "flow") {
+    h += `<div class="card" style="padding:32px">`;
+    endToEndFlow.forEach((step, i) => {
+      h += `<div class="flow-step"><div class="flow-num">${i+1}</div><div class="flow-body"><div class="flow-title">${step.title}</div><div class="flow-desc">${step.desc}</div></div></div>`;
+    });
+    h += `</div>`;
+  }
+
+  if (activeSection === "deployment") {
+    const total = checklistGroups.reduce((a,g)=>a+g.checks.length,0);
+    const done = Object.values(checkedItems).filter(Boolean).length;
+    const pct = Math.round((done/total)*100);
+    h += `<div class="progress-bar-wrap"><div class="progress-track"><div class="progress-fill ${pct===100?'done':''}" style="width:${pct}%"></div></div><div class="progress-label">${done}/${total} (${pct}%)</div></div>`;
+    h += checklistGroups.map((g,gi)=>`<div class="card"><div class="card-title">${g.name}</div>${g.checks.map((c,ci)=>{const k=`${gi}-${ci}`;const ch=checkedItems[k];return`<div class="check-item"><div class="check-box ${ch?'checked':''}" data-key="${k}">${ch?'✓':''}</div><span class="check-text ${ch?'checked-text':''}">${c}</span></div>`;}).join("")}</div>`).join("");
+  }
+
+  document.getElementById("main").innerHTML = h;
+
+  if (activeSection === "deployment") {
+    document.querySelectorAll(".check-box").forEach(b => b.addEventListener("click", () => { checkedItems[b.dataset.key]=!checkedItems[b.dataset.key]; buildMain(); }));
+  }
+}
+
+buildNav();
+buildMain();
+</script>
+</body>
+</html>
